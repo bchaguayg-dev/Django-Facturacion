@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block titulo %}{{ titulo }}{% endblock %}
+
+{% block contenido %}
+<div class="row justify-content-center">
+    <div class="col-md-7 col-lg-6">
+        <div class="tarjeta">
+            <h1 class="h4 titulo-pagina mb-4">{{ titulo }}</h1>
+            <form method="post" novalidate>
+                {% csrf_token %}
+                {% for campo in form %}                   {# nombre, descripción y activo #}
+                    {% if campo.name == "activo" %}       {# la casilla va con su etiqueta a la derecha #}
+                        <div class="form-check mb-4">
+                            {{ campo }} <label class="form-check-label" for="{{ campo.id_for_label }}">Activo</label>
+                        </div>
+                    {% else %}
+                        <div class="mb-3">
+                            <label class="form-label" for="{{ campo.id_for_label }}">{{ campo.label }}</label>
+                            {{ campo }}
+                            {% for error in campo.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+                <button type="submit" class="btn btn-verde">{{ boton }}</button>
+                <a href="{% url 'facturacion:categoria_lista' %}" class="btn btn-outline-secondary">Cancelar</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

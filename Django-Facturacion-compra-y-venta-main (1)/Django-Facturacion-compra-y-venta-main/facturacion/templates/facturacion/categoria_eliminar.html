@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block titulo %}Eliminar categoría{% endblock %}
+
+{% block contenido %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="tarjeta text-center">
+            <h1 class="h4 mb-3">¿Eliminar la categoría <span class="text-danger">{{ categoria.nombre }}</span>?</h1>
+            {% with total=categoria.productos.count %}
+                {% if total %}<p class="text-warning fw-semibold">Se quitará de {{ total }} producto(s). Los productos seguirán existiendo.</p>{% endif %}
+            {% endwith %}
+            <form method="post">                          {# POST: DeleteView borra #}
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Sí, eliminar</button>
+                <a href="{% url 'facturacion:categoria_lista' %}" class="btn btn-outline-secondary">No, volver</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

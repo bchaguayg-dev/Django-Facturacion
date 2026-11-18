@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block titulo %}{{ cliente }}{% endblock %}
+
+{% block contenido %}
+<div class="tarjeta mb-3">
+    <h1 class="h4 titulo-pagina mb-3">{{ cliente.apellidos }} {{ cliente.nombres }}</h1>
+    <table class="table m-0">
+        <tr><th style="width:35%">Cédula</th><td>{{ cliente.cedula }}</td></tr>
+        <tr><th>Correo</th><td>{{ cliente.email|default:"—" }}</td></tr>
+        <tr><th>Teléfono</th><td>{{ cliente.telefono|default:"—" }}</td></tr>
+        <tr><th>Dirección</th><td>{{ cliente.direccion|default:"—" }}</td></tr>
+        <tr><th>Registrado por</th><td>{{ cliente.user|default:"—" }} · {{ cliente.fecha_creacion|date:"d/m/Y H:i" }}</td></tr>
+    </table>
+</div>
+
+{# Sus ventas: 1:N al revés con related_name="ventas" #}
+<div class="tarjeta">
+    <h2 class="h5 mb-3">Ventas del cliente</h2>
+    <table class="table table-sm m-0">
+        <thead><tr><th>#</th><th>Fecha</th><th>Tipo de pago</th><th class="text-end">Total</th></tr></thead>
+        <tbody>
+            {% for venta in cliente.ventas.all %}
+            <tr>
+                <td>{{ venta.pk }}</td>
+                <td>{{ venta.fecha_hora|date:"d/m/Y H:i" }}</td>
+                <td>{{ venta.get_tipo_pago_display }}</td>   {# choices: muestra "Contado", no "contado" #}
+                <td class="text-end">$ {{ venta.total }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="4" class="text-center text-muted py-3">Este cliente aún no tiene ventas.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="mt-3">
+    <a href="{% url 'facturacion:cliente_editar' cliente.pk %}" class="btn btn-outline-primary">Editar</a>
+    <a href="{% url 'facturacion:cliente_lista' %}" class="btn btn-outline-secondary">Volver</a>
+</div>
+{% endblock %}

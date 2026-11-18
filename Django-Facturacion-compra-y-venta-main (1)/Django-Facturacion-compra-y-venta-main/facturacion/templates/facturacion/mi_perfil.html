@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block titulo %}{{ titulo }}{% endblock %}
+
+{% block contenido %}
+<div class="row justify-content-center">
+    <div class="col-md-7 col-lg-6">
+        <div class="tarjeta">
+            <h1 class="h4 titulo-pagina mb-1">{{ titulo }}</h1>
+            {# Estos datos vienen de User (auth_user): solo se muestran #}
+            <p class="text-muted mb-4">
+                Usuario: <b>{{ user.username }}</b>{% if user.email %} · {{ user.email }}{% endif %}
+                · Desde {{ user.date_joined|date:"d/m/Y" }}
+            </p>
+            <form method="post" novalidate>
+                {% csrf_token %}
+                {% for campo in form %}                   {# cédula, teléfono y cargo #}
+                <div class="mb-3">
+                    <label class="form-label" for="{{ campo.id_for_label }}">{{ campo.label }}</label>
+                    {{ campo }}
+                    {% for error in campo.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+                </div>
+                {% endfor %}
+                <button type="submit" class="btn btn-verde">Guardar cambios</button>
+                <a href="{% url 'home' %}" class="btn btn-outline-secondary">Volver al inicio</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
